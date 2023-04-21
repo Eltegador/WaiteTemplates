@@ -214,4 +214,4 @@ if __name__ == "__main__":
     folder_path = r"C:\\Users\\Tego\\Python\\Ben\\templates\\Images"
 
     # Run the Tkinter event loop
-    root.mainloop()
+    #root.mainloop()
