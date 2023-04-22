@@ -34,7 +34,7 @@ stages:
       vmImage: $(vmImageName)
     steps:
     - task: UsePythonVersion@0
-            inputs:
+      inputs:
         versionSpec: '3.11.0'
          displayName: 'Use Python 3.11.0'
     - script: |
@@ -56,8 +56,8 @@ stages:
         python -m pip install --upgrade pip
         pip install setup
         pip install -r requirements.txt
-      workingDirectory: $(projectRoot)
-      displayName: "Install requirements"
+        workingDirectory: $(projectRoot)
+        displayName: "Install requirements"
 
     - task: ArchiveFiles@2
       displayName: 'Archive files'
