@@ -109,5 +109,4 @@ stages:
                   appName: $(webAppName)
                   package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
                   deploymentMethod: zipDeploy
-                  startUpCommand: 'startup.txt' 
-            
+                  startUpCommand: 'startup.txt'
