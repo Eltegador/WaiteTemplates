@@ -20,7 +20,7 @@ import uuid
 from flask import Flask, Response, jsonify, render_template, request, send_file
 
 
-app = Flask(__name__, template_folder=r'C://Users//Tego//Python//Ben')
+app = Flask(__name__)
 
 @app.route('/')
 def index():
