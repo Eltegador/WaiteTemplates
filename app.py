@@ -15,8 +15,9 @@ import uuid
 from flask import Flask, Response, jsonify, render_template, request, send_file
 
 
-app = Flask(__name__)
 
+app = Flask(__name__)
+     
 @app.route('/')
 def index():
     return render_template('index.html')
