@@ -35,8 +35,8 @@ stages:
     steps:
     - task: UsePythonVersion@0
       inputs:
-        versionSpec: '$(pythonVersion)'
-         displayName: 'Use Python $(pythonVersion)'
+          versionSpec: '$(pythonVersion)'
+          displayName: 'Use Python $(pythonVersion)'
     - script: |
          python -m venv antenv
          source antenv/bin/activate
@@ -89,15 +89,15 @@ stages:
           - task: UsePythonVersion@0
             inputs:
               versionSpec: '$(pythonVersion)'
-            displayName: 'Use Python version'
+              displayName: 'Use Python version'
 
           - task: AzureWebApp@1
             displayName: 'Deploy Azure Web App : ConfiguratorWaiteApp'
             inputs:
-              azureSubscription: $(azureServiceConnectionId)
-              appName: $(webAppName)
-              package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
-              deploymentMethod: zipDeploy
+                  azureSubscription: $(azureServiceConnectionId)
+                  appName: $(webAppName)
+                  package: $(Pipeline.Workspace)/drop/$(Build.BuildId).zip
+                  deploymentMethod: zipDeploy
           - task: ArchiveFiles@2
             inputs:
                 rootFolderOrFile: '$(Build.SourcesDirectory)'
@@ -107,8 +107,8 @@ stages:
                 replaceExistingArchive: true
                 verbose: # (no value); this input is optional
           - publish: $(Build.ArtifactStagingDirectory)/Application$(Build.BuildId).zip
-                displayName: 'Upload package'
-                artifact: drop
+            displayName: 'Upload package'
+            artifact: drop
           # The following parameter is specific to the Flask example code. You may
           # or may not need a startup command for your app.
 
