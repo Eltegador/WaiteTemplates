@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Waite Customizer</title>
+  </head>
+  <body>
+    <h2> Processed Images </h2>
+    {% for image in images %}
+      <img src="data:image/png;base64,{{ image }}" alt="processed image">
+    {% endfor %}
+  </body>
+</html>
