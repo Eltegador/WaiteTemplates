@@ -35,8 +35,8 @@ stages:
     steps:
     - task: UsePythonVersion@0
       inputs:
-        versionSpec: '3.11.0'
-         displayName: 'Use Python 3.11.0'
+        versionSpec: '$(pythonVersion)'
+         displayName: 'Use Python $(pythonVersion)'
     - script: |
          python -m venv antenv
          source antenv/bin/activate
