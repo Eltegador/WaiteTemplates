@@ -1,16 +1,11 @@
-from tkinter import filedialog
-from tkinter import colorchooser
 import cv2
 import numpy as np
-import tkinter as tk
-from tkinter import Tk
 import random
 from collections import Counter
 from PIL import Image
 import PIL
 import os
 from PIL import Image, ImageTk
-from tkinter.filedialog import askopenfilename
 import pyodbc
 import base64
 import pandas as pd
