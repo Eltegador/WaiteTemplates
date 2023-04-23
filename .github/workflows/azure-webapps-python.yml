@@ -6,8 +6,8 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_WEBAPP_NAME: waiteconfig  # set this to the name of your Azure Web App
-  PYTHON_VERSION: '3.11'              # set this to the Python version to use
+  AZURE_WEBAPP_NAME: waiteconfig
+  PYTHON_VERSION: '3.11'
 
 permissions:
   contents: read
@@ -25,14 +25,15 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
 
-      - name: Install dependencies
+      - name: Create and start virtual environment
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          python -m venv venv
+          source venv/bin/activate
 
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+      - name: Install dependencies
+        run: pip install -r requirements.txt
 
-      - name: Upload artifact for deployment jobs
+      - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: python-app
@@ -45,18 +46,16 @@ jobs:
     needs: build
     environment:
       name: 'Development'
-      url: ${{ secrets.WEBAPP_URL }}
+      url: ${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net
 
     steps:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
           name: python-app
-          path: .
 
       - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.WEBAPP_URL }}
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
