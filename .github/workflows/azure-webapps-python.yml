@@ -1,7 +1,7 @@
 name: Build and deploy Python app to Azure Web App
 
 env:
-  AZURE_WEBAPP_NAME: ConfiguratorWaiteApp  # set this to the name of your Azure Web App
+  AZURE_WEBAPP_NAME: waiteconfig  # set this to the name of your Azure Web App
   PYTHON_VERSION: '3.11'              # set this to the Python version to use
   ARTIFACT_DIR: ${{ github.workspace }}/app.zip # set the path to your artifact directory
 
@@ -68,5 +68,5 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ConfiguratorWaiteApp
+          app-name: waiteconfig
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
