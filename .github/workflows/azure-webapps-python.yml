@@ -3,6 +3,7 @@ name: Build and deploy Python app to Azure Web App
 env:
   AZURE_WEBAPP_NAME: ConfiguratorWaiteApp  # set this to the name of your Azure Web App
   PYTHON_VERSION: '3.11'              # set this to the Python version to use
+  ARTIFACT_DIR: ${{ github.workspace }}/app.zip # set the path to your artifact directory
 
 on:
   push:
@@ -19,12 +20,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up build environment
-        run: |
-          echo "Setting up build environment"
-          export Build.ArtifactStagingDirectory=$HOME/build
-          mkdir -p $Build.ArtifactStagingDirectory
-
       - name: Set up Python version
         uses: actions/setup-python@v3.0.0
         with:
@@ -39,18 +34,19 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Create ZIP file
-        run: |
-          cd $Build.ArtifactStagingDirectory
-          zip -r app.zip .
-
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
+      - name: Create ZIP file
+        run: |
+          mkdir -p ${{ env.ARTIFACT_DIR }}
+          zip -r ${{ env.ARTIFACT_DIR }}/app.zip .
+          ls -al ${{ env.ARTIFACT_DIR }}
+
       - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: python-app
-          path: $Build.ArtifactStagingDirectory/app.zip
+          path: ${{ env.ARTIFACT_DIR }}
 
   deploy:
     permissions:
@@ -63,10 +59,10 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: python-app
-          path: $Build.ArtifactStagingDirectory
+          path: .
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
