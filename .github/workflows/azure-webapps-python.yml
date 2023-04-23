@@ -1,64 +1,34 @@
 name: Build and deploy Python app to Azure Web App
 
-env:
-  AZURE_WEBAPP_NAME: waiteconfig  # set this to the name of your Azure Web App
-  PYTHON_VERSION: '3.11'              # set this to the Python version to use
-
 on:
   push:
     branches: [ "master" ]
   workflow_dispatch:
 
-permissions:
-  contents: read
-
+env:
+  AZURE_WEBAPP_NAME: waiteconfig
+  PYTHON_VERSION: '3.11'
+  AZURE_WEBAPP_URL: ${{ secrets.AZURE_WEBAPP_URL }}
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v2.3.4
-
-      - name: Set up Python version
-        uses: actions/setup-python@v2.2.2
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
-
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-      - name: Install dependencies
-        run: pip install -r requirements.txt
-
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
-
-      - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v2.2.4
-        with:
-          name: python-app
-          path: |
-            .
-            !venv/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    environment:
-      name: 'Production'
-      url: ${{ env.AZURE_WEBAPP_URL }}
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2.2.4
-        with:
-          name: python-app
-
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
-
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+    - name: Install dependencies
+      run: |
+        python -m venv env
+        source env/bin/activate
+        pip install -r requirements.txt
+    - name: Build and deploy Python app to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: .
+        azure-webapp-url: ${{ secrets.AZURE_WEBAPP_URL }}
