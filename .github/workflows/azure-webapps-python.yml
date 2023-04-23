@@ -3,7 +3,6 @@ name: Build and deploy Python app to Azure Web App
 env:
   AZURE_WEBAPP_NAME: waiteconfig  # set this to the name of your Azure Web App
   PYTHON_VERSION: '3.11'              # set this to the Python version to use
-  ARTIFACT_DIR: ${{ github.workspace }}/app.zip # set the path to your artifact directory
 
 on:
   push:
@@ -30,24 +29,18 @@ jobs:
         run: |
           python -m venv venv
           source venv/bin/activate
-
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
-      - name: Create ZIP file
-        run: |
-          mkdir -p ${{ env.ARTIFACT_DIR }}
-          zip -r ${{ env.ARTIFACT_DIR }}/app.zip .
-          ls -al ${{ env.ARTIFACT_DIR }}
-
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v3
         with:
           name: python-app
-          path: ${{ env.ARTIFACT_DIR }}
-
+          path: |
+            .
+            !venv/
   deploy:
     permissions:
       contents: none
